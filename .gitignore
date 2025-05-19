@@ -1,0 +1,19 @@
+# Ignore build and VS files
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+
+# Ignore Rider/JetBrains files
+.idea/
+*.sln.iml
+
+# Ignore logs
+*.log
+
+# Ignore EF Core migrations snapshot
+*Migrations/*Snapshot.cs
