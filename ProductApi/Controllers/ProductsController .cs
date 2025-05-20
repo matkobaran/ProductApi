@@ -17,9 +17,9 @@ namespace ProductApi.Controllers
         }
 
         /// <summary>
-        /// Return all available products
+        /// List all products
         /// </summary>
-        /// <returns>Return product</returns>
+        /// <returns>Return all products</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
@@ -27,10 +27,10 @@ namespace ProductApi.Controllers
         }
 
         /// <summary>
-        /// Return single product by ID
+        /// Get product by ID
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Return product</returns>
+        /// <returns>Return single product</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
@@ -38,11 +38,11 @@ namespace ProductApi.Controllers
             if (product == null)
                 return NotFound();
 
-            return product;
+            return Ok(product);
         }
 
         /// <summary>
-        /// Create new product.
+        /// Create new product
         /// </summary>
         /// <param name="product"></param>
         /// <returns>New created product</returns>
@@ -55,7 +55,7 @@ namespace ProductApi.Controllers
         }
 
         /// <summary>
-        /// Update stock of the product.
+        /// Update product stock
         /// </summary>
         /// <param name="id"></param>
         /// <param name="newStock"></param>
@@ -69,7 +69,7 @@ namespace ProductApi.Controllers
             product.Stock = newStock;
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
     }
 }
