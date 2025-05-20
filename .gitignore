@@ -8,6 +8,8 @@ obj/
 *.sln.docstates
 *.dbmdl
 *.db
+*.db-wal
+*.db-shm
 
 # Ignore Rider/JetBrains files
 .idea/
