@@ -50,7 +50,7 @@ A simple REST API service that provides all available products of an e-shop and 
 
 This project includes unit tests to ensure the stability and correctness of the API.
 
-### ▶️ Run Tests from Command Line
+### Run Tests from Command Line
 
 1. Open a terminal in the root of the solution.
 2. Run the following command:
