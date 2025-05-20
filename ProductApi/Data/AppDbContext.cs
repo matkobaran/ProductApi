@@ -3,7 +3,7 @@ using ProductApi.Models;
 
 namespace ProductApi.Data
 {
-    public class AppDbContext: DbContext
+    public class AppDbContext : DbContext
     {
         public DbSet<Product> Products { get; set; }
 
