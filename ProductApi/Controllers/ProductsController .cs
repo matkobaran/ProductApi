@@ -16,14 +16,21 @@ namespace ProductApi.Controllers
             _context = context;
         }
 
-        // Return all available products
+        /// <summary>
+        /// Return all available products
+        /// </summary>
+        /// <returns>Return product</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
             return await _context.Products.ToListAsync();
         }
 
-        // Return single product by ID
+        /// <summary>
+        /// Return single product by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Return product</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
@@ -34,7 +41,11 @@ namespace ProductApi.Controllers
             return product;
         }
 
-        // Create new product
+        /// <summary>
+        /// Create new product.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns>New created product</returns>
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(Product product)
         {
@@ -43,9 +54,13 @@ namespace ProductApi.Controllers
             return Ok(product);
         }
 
-        // Update stock of the product
+        /// <summary>
+        /// Update stock of the product.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newStock"></param>
         [HttpPatch("{id}/stock")]
-        public async Task<IActionResult> UpdateStock(int id, [FromBody] int newStock)
+        public async Task<ActionResult> UpdateStock(int id, [FromBody] int newStock)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
