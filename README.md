@@ -30,12 +30,12 @@ A simple REST API service that provides all available products of an e-shop and 
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-username/ProductApi.git
-   cd ProductApi
+   git clone https://github.com/matkobaran/ProductApi.git
    ```
 2. **Build and run**:
 
    ```bash
+   cd ProductApi
    dotnet restore
    dotnet ef database update
    dotnet run
@@ -43,7 +43,7 @@ A simple REST API service that provides all available products of an e-shop and 
 3. **Open in browser***:
 
    ```bash
-   https://localhost:{your-port}/swagger
+   http://localhost:5202/swagger
    ```
 
 ## Running Tests
