@@ -31,6 +31,7 @@ namespace ProductApi.Controllers
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(int pageNumber = 1, int pageSize = 10)
         {
             return await _context.Products
+                .OrderBy(p => p.ID)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
