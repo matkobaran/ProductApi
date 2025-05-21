@@ -57,7 +57,6 @@ namespace ProductApi.Test
             var controller = new ProductsController(context);
             var newProduct = new Product
             {
-                ID = 14,
                 Name = "Test product #14",
                 ImageUrl = "https://alza.cz"
             };
