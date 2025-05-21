@@ -61,7 +61,7 @@ namespace ProductApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="newStock"></param>
-        [HttpPatch("{id}/stock")]
+        [HttpPatch("{id}/updatestock")]
         public async Task<ActionResult> UpdateStock(int id, [FromBody] int newStock)
         {
             var product = await _context.Products.FindAsync(id);

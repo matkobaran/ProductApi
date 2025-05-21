@@ -3,6 +3,7 @@ using Asp.Versioning.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ProductApi.Data;
+using ProductApi.Services;
 using ProductApi.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-
+// Add API versioning to the application
 builder.Services.AddApiVersioning(
     options =>
     {
@@ -38,6 +39,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+// Register singleton queue service
+builder.Services.AddSingleton<IStockUpdateQueue, InMemoryStockUpdateQueue>();
+//  Register background hosted service
+builder.Services.AddHostedService<StockUpdateBackgroundService>();
 
 var app = builder.Build();
 

@@ -1,6 +1,6 @@
 ﻿# Product API
 
-A simple REST API service that provides all available products of an e-shop and allows partial updates of a single product.
+A simple REST API that manages an e-shop’s product catalog, supporting product listing, pagination, versioning, and asynchronous stock updates.
 
 ## Features
 
@@ -8,6 +8,9 @@ A simple REST API service that provides all available products of an e-shop and 
 - Get a single product by ID
 - Create new product
 - Update product stock
+- Pagination support
+- Asynchronous queue for handling of product stock update
+- API versioning support (v1, v2)  
 - Swagger documentation
 
 ## Tech Stack
@@ -15,7 +18,7 @@ A simple REST API service that provides all available products of an e-shop and 
 - ASP.NET Core Web API
 - Entity Framework Core (with SQLite)
 - Swagger (OpenAPI) for API documentation
-
+- In-memory queue
 ---
 
 ## Prerequisites
@@ -40,11 +43,14 @@ A simple REST API service that provides all available products of an e-shop and 
    dotnet ef database update
    dotnet run
    ```
-3. **Open in browser***:
+3. **Open in browser**:
 
    ```bash
    http://localhost:5202/swagger
    ```
+**API versions can be accessed via URL segments:**
+- /api/v1/products
+- /api/v2/products
 
 ## Running Tests
 
