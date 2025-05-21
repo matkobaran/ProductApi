@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProductApi.Controllers;
 using ProductApi.Data;
 using ProductApi.Models;
+using ProductApi.Seed;
 
 namespace ProductApi.Test
 {
@@ -15,7 +16,7 @@ namespace ProductApi.Test
                 .Options;
 
             var context = new AppDbContext(options);
-            context.Products.AddRange(TestData.GetSampleProducts());
+            context.Products.AddRange(SeedData.GetProducts());
             context.SaveChanges();
 
             return context;
@@ -31,7 +32,7 @@ namespace ProductApi.Test
             var result = await controller.GetAllProducts();
             var products = Assert.IsAssignableFrom<IEnumerable<Product>>(result.Value);
 
-            Assert.Equal(6, products.Count());
+            Assert.Equal(13, products.Count());
         }
 
         [Fact]
@@ -56,8 +57,8 @@ namespace ProductApi.Test
             var controller = new ProductsController(context);
             var newProduct = new Product
             {
-                ID = 7,
-                Name = "Test product #1",
+                ID = 14,
+                Name = "Test product #14",
                 ImageUrl = "https://alza.cz"
             };
 
@@ -65,13 +66,13 @@ namespace ProductApi.Test
 
             var actionResult = Assert.IsType<OkObjectResult>(result.Result);
             var product = Assert.IsType<Product>(actionResult.Value);
-            Assert.Equal("Test product #1", product.Name);
+            Assert.Equal("Test product #14", product.Name);
             Assert.Equal("https://alza.cz", product.ImageUrl);
 
             var productsResult = await controller.GetAllProducts();
 
             var products = Assert.IsAssignableFrom<IEnumerable<Product>>(productsResult.Value);
-            Assert.Equal(7, products.Count());
+            Assert.Equal(14, products.Count());
         }
 
         [Fact]
