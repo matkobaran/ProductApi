@@ -66,3 +66,11 @@ This project includes unit tests to ensure the stability and correctness of the 
 
 ## Author
 Martin Baran
+
+### TODO
+- Add advanced tests
+- Better entry validation
+- Better REST Api responses, based on REST best practices
+- CQRS, DDD
+- RabbitMQ
+- Authentication, Authorization
