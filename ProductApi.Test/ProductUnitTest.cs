@@ -30,13 +30,14 @@ namespace ProductApi.Test
             var controller = new ProductsController(context);
 
             var result = await controller.GetAllProducts();
-            var products = Assert.IsAssignableFrom<IEnumerable<Product>>(result.Value);
+            var actionResult = Assert.IsType<OkObjectResult>(result.Result);
+            var products = Assert.IsAssignableFrom<IEnumerable<Product>>(actionResult.Value);
 
             Assert.Equal(13, products.Count());
         }
 
         [Fact]
-        public async Task GetSecondProduct_ShouldReturnSecondProduct()
+        public async Task GetProductById_ExistingId_ShouldReturnProduct()
         {
 
             var context = GetDbContext();
@@ -50,11 +51,27 @@ namespace ProductApi.Test
         }
 
         [Fact]
-        public async Task CreateProduct_ShouldReturnProduct()
+        public async Task GetProductById_NonExistingId_ShouldReturnNotFound()
         {
-
             var context = GetDbContext();
             var controller = new ProductsController(context);
+
+            var result = await controller.GetProductById(999);
+
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public async Task CreateProduct_ValidInput_ShouldReturnProduct()
+        {
+            var context = GetDbContext();
+            var controller = new ProductsController(context);
+
+            var initialResult = await controller.GetAllProducts();
+            var initialActionResult = Assert.IsType<OkObjectResult>(initialResult.Result);
+            var initialProducts = Assert.IsAssignableFrom<IEnumerable<Product>>(initialActionResult.Value);
+            var initialCount = initialProducts.Count();
+
             var newProduct = new Product
             {
                 Name = "Test product #14",
@@ -63,30 +80,96 @@ namespace ProductApi.Test
 
             var result = await controller.CreateProduct(newProduct);
 
-            var actionResult = Assert.IsType<OkObjectResult>(result.Result);
+            var actionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
             var product = Assert.IsType<Product>(actionResult.Value);
             Assert.Equal("Test product #14", product.Name);
             Assert.Equal("https://alza.cz", product.ImageUrl);
 
-            var productsResult = await controller.GetAllProducts();
+            var endResult = await controller.GetAllProducts();
+            var endActionResult = Assert.IsType<OkObjectResult>(endResult.Result);
+            var endProducts = Assert.IsAssignableFrom<IEnumerable<Product>>(endActionResult.Value);
+            var endCount = endProducts.Count();
 
-            var products = Assert.IsAssignableFrom<IEnumerable<Product>>(productsResult.Value);
-            Assert.Equal(14, products.Count());
+            Assert.Equal(initialCount + 1, endCount);
         }
 
         [Fact]
-        public async Task UpdateThirdProductStock_ShouldReturnSuccess()
+        public async Task CreateProduct_WithoutImage_ShouldFail()
         {
 
             var context = GetDbContext();
             var controller = new ProductsController(context);
 
-            await controller.UpdateStock(3, 10);
-            var result = await controller.GetProductById(3);
+            var initialResult = await controller.GetAllProducts();
+            var initialActionResult = Assert.IsType<OkObjectResult>(initialResult.Result);
+            var initialProducts = Assert.IsAssignableFrom<IEnumerable<Product>>(initialActionResult.Value);
+            var initialCount = initialProducts.Count();
 
+            var newProduct = new Product
+            {
+                Name = "Test product #14",
+            };
+
+            var result = await controller.CreateProduct(newProduct);
+            var actionResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+
+            var endResult = await controller.GetAllProducts();
+            var endActionResult = Assert.IsType<OkObjectResult>(endResult.Result);
+            var endProducts = Assert.IsAssignableFrom<IEnumerable<Product>>(endActionResult.Value);
+            var endCount = initialProducts.Count();
+            Assert.Equal(initialCount, endCount);
+        }
+
+        [Fact]
+        public async Task UpdateProductStock_ExistingId_ShouldUpdateStock()
+        {
+
+            var context = GetDbContext();
+            var controller = new ProductsController(context);
+
+            var productId = 2;
+
+            var initialResult = await controller.GetProductById(productId);
+            var initialActionResult = Assert.IsType<OkObjectResult>(initialResult.Result);
+            var initialProduct = Assert.IsAssignableFrom<Product>(initialActionResult.Value);
+            var initialStock = initialProduct.Stock;
+
+            await controller.UpdateStock(productId, initialStock + 5);
+
+            var result = await controller.GetProductById(productId);
             var actionResult = Assert.IsType<OkObjectResult>(result.Result);
             var product = Assert.IsAssignableFrom<Product>(actionResult.Value);
-            Assert.Equal(10, product.Stock);
+            Assert.Equal(initialStock + 5, product.Stock);
+        }
+
+        [Fact]
+        public async Task UpdateProductStock_NonExistingId_ShouldFail()
+        {
+
+            var context = GetDbContext();
+            var controller = new ProductsController(context);
+
+            var productId = 999;
+
+            await controller.UpdateStock(productId, 5);
+            var result = await controller.GetProductById(productId);
+
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public async Task UpdateProductStock_NegativeStock_ShouldFail()
+        {
+
+            var context = GetDbContext();
+            var controller = new ProductsController(context);
+
+            var productId = 2;
+            var newStock = -1;
+
+            var result = await controller.UpdateStock(productId, newStock);
+
+            Assert.IsType<BadRequestObjectResult>(result);
         }
     }
 }
