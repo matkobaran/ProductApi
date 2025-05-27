@@ -25,7 +25,7 @@ namespace ProductApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
-            return await _context.Products.ToListAsync();
+            return Ok(await _context.Products.ToListAsync());
         }
 
         /// <summary>
@@ -36,6 +36,10 @@ namespace ProductApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
+            if (id == 0)
+            {
+                return BadRequest("Invalid product ID");
+            }
             var product = await _context.Products.FindAsync(id);
             if (product == null)
                 return NotFound();
@@ -53,11 +57,11 @@ namespace ProductApi.Controllers
         {
             if (product == null || product.Name == "" || product.ImageUrl == "")
             {
-                return BadRequest();
+                return BadRequest("Invalid input");
             }
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
-            return Ok(product);
+            return CreatedAtAction(nameof(GetProductById), new { id = product.ID }, product);
         }
 
         /// <summary>
@@ -68,6 +72,16 @@ namespace ProductApi.Controllers
         [HttpPatch("{id}/updatestock")]
         public async Task<ActionResult> UpdateStock(int id, [FromBody] int newStock)
         {
+            if (id < 0)
+            {
+                return BadRequest("Invalid product ID");
+            }
+
+            if (newStock < 0)
+            {
+                return BadRequest("Invalid stock number");
+            }
+
             var product = await _context.Products.FindAsync(id);
             if (product == null)
                 return NotFound();
