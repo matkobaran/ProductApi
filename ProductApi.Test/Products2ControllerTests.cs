@@ -39,7 +39,7 @@ namespace ProductApi.Test
             var products = Assert.IsAssignableFrom<IEnumerable<Product>>(actionResult.Value);
 
             Assert.Equal(pageSize, products.Count());
-            Assert.All(products, p => Assert.InRange(p.ID, 6, 10));
+            Assert.All(products, p => Assert.InRange(p.ID, ((page - 1 )*pageSize + 1), page*pageSize));
 
         }
 
