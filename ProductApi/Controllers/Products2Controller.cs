@@ -30,11 +30,15 @@ namespace ProductApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Products
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest();
+            }
+            return Ok(await _context.Products
                 .OrderBy(p => p.ID)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync());
         }
 
         /// <summary>
@@ -43,8 +47,14 @@ namespace ProductApi.Controllers
         /// <param name="id"></param>
         /// <param name="newStock"></param>
         [HttpPost("{id}/updatestock")]
-        public async Task<IActionResult> UpdateStock(int id, [FromBody] int newStock)
+        public async Task<IActionResult> UpdateStock(int id, [FromBody] int? newStock)
         {
+            if (newStock == null)
+                return BadRequest("Stock value is required.");
+
+            if (newStock < 0)
+                return BadRequest("Stock cannot be negative.");
+
             var exists = await _context.Products.AnyAsync(p => p.ID == id);
             if (!exists)
                 return NotFound();
@@ -52,10 +62,11 @@ namespace ProductApi.Controllers
             _queue.Enqueue(new StockUpdateMessage
             {
                 ProductId = id,
-                NewStock = newStock
+                NewStock = newStock.Value
             });
 
             return Accepted();
         }
+
     }
 }
