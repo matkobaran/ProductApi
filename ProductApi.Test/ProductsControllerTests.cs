@@ -7,7 +7,7 @@ using ProductApi.Seed;
 
 namespace ProductApi.Test
 {
-    public class ProductUnitTest
+    public class ProductsControllerTests
     {
         private AppDbContext GetDbContext()
         {
