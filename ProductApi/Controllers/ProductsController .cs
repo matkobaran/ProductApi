@@ -51,6 +51,10 @@ namespace ProductApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(Product product)
         {
+            if (product == null || product.Name == "" || product.ImageUrl == "")
+            {
+                return BadRequest();
+            }
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return Ok(product);
