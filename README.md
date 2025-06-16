@@ -40,6 +40,21 @@ A simple REST API that manages an e-shop’s product catalog, supporting product
    ```bash
    cd ProductApi
    dotnet restore
+   ```
+
+   **If you're working on an existing project and the DB is already set up** 
+
+   Apply existing migrations:
+   ```bash
+   dotnet ef database update
+   dotnet run
+   ```
+
+   **If you make changes to the model**
+   
+   Create a new migration: 
+   ```bash
+   dotnet ef migrations add NameOfMigration
    dotnet ef database update
    dotnet run
    ```
@@ -68,9 +83,6 @@ This project includes unit tests to ensure the stability and correctness of the 
 Martin Baran
 
 ### TODO
-- Add advanced tests
-- Better entry validation
-- Better REST Api responses, based on REST best practices
 - CQRS, DDD
 - RabbitMQ
 - Authentication, Authorization
